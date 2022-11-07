@@ -123,6 +123,8 @@ const ManageSlideOver = ({
     );
   };
 
+  console.log({ data: data.mediaInfo });
+
   return (
     <SlideOver
       show={show}

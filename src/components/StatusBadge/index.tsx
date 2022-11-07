@@ -17,6 +17,7 @@ const messages = defineMessages({
 
 interface StatusBadgeProps {
   status?: MediaStatus;
+  downloadItem?: any;
   is4k?: boolean;
   inProgress?: boolean;
   plexUrl?: string;
@@ -27,6 +28,7 @@ interface StatusBadgeProps {
 
 const StatusBadge = ({
   status,
+  downloadItem,
   is4k = false,
   inProgress = false,
   plexUrl,
@@ -40,6 +42,19 @@ const StatusBadge = ({
 
   let mediaLink: string | undefined;
   let mediaLinkDescription: string | undefined;
+
+  const calculateDownloadProgress = (media: any) => {
+    return media?.reduce((totalSize: number, item: any) => {
+      // console.log({ totalSize });
+      // console.log({ item });
+      return (totalSize += Math.round(
+        ((item.size - item.sizeLeft) / item.size) * 100
+      ));
+    }, 0);
+  };
+
+  console.log('INSIDE STATUS BADGE', downloadItem);
+  console.log('NEW FUNC TO CALCULATE', calculateDownloadProgress(downloadItem));
 
   if (
     mediaType &&
@@ -129,8 +144,15 @@ const StatusBadge = ({
     case MediaStatus.PROCESSING:
       return (
         <Tooltip content={mediaLinkDescription}>
-          <Badge badgeType="primary" href={mediaLink}>
-            <div className="flex items-center">
+          <Badge badgeType="primary" href={mediaLink} className="bg-gray-600">
+            <div
+              className="flex items-center bg-indigo-600 transition-all duration-200 ease-in-out"
+              style={{
+                width: `${
+                  downloadItem ? calculateDownloadProgress(downloadItem) : 0
+                }%`,
+              }}
+            >
               <span>
                 {intl.formatMessage(
                   is4k ? messages.status4k : messages.status,
@@ -141,7 +163,7 @@ const StatusBadge = ({
                   }
                 )}
               </span>
-              {inProgress && <Spinner className="ml-1 h-3 w-3" />}
+              {/* {inProgress && <Spinner className="ml-1 h-3 w-3" />} */}
             </div>
           </Badge>
         </Tooltip>

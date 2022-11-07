@@ -221,6 +221,8 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
     fallbackData: request,
   });
 
+  console.log('INSIDE REQUEST CARD', requestData);
+
   const { plexUrl, plexUrl4k } = useDeepLinks({
     plexUrl: requestData?.media?.plexUrl,
     plexUrl4k: requestData?.media?.plexUrl4k,
@@ -396,6 +398,11 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
               <StatusBadge
                 status={
                   requestData.media[requestData.is4k ? 'status4k' : 'status']
+                }
+                downloadItem={
+                  requestData.is4k
+                    ? requestData.media?.downloadStatus4k
+                    : requestData.media?.downloadStatus
                 }
                 inProgress={
                   (
